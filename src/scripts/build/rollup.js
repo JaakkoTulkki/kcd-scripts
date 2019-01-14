@@ -23,13 +23,14 @@ const useBuiltinConfig =
 const config = useBuiltinConfig
   ? `--config ${hereRelative('../../config/rollup.config.js')}`
   : args.includes('--config')
-    ? ''
-    : '--config' // --config will pick up the rollup.config.js file
+  ? ''
+  : '--config' // --config will pick up the rollup.config.js file
 
 const environment = parsedArgs.environment
   ? `--environment ${parsedArgs.environment}`
   : ''
-const watch = parsedArgs.watch ? '--watch' : ''
+const watch =
+  parsedArgs.watch || process.argv.includes('--watch') ? '--watch' : ''
 const sizeSnapshot = parsedArgs['size-snapshot']
 
 let formats = ['esm', 'cjs', 'umd', 'umd.min']
@@ -39,7 +40,6 @@ if (typeof parsedArgs.bundle === 'string') {
 }
 
 const defaultEnv = 'BUILD_ROLLUP=true'
-
 const getCommand = (env, ...flags) =>
   [crossEnv, defaultEnv, env, rollup, config, environment, watch, ...flags]
     .filter(Boolean)

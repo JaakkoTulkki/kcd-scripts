@@ -93,7 +93,10 @@ function externalPredicate(id) {
   const isDep = externalPattern.test(id)
   if (umd) {
     // for UMD, we want to bundle all non-peer deps
-    return isDep
+    // console.log('********')
+    // console.log(id, isDep)
+    // console.log('********')
+    return false
   }
   // for esm/cjs we want to make all node_modules external
   // TODO: support bundledDependencies if someone needs it ever...
@@ -146,7 +149,7 @@ const replacements = Object.entries(
   return acc
 }, {})
 
-module.exports = {
+const finalConfig = {
   input: codeSplitting ? input : input[0],
   output,
   experimentalCodeSplitting: codeSplitting,
@@ -186,3 +189,10 @@ module.exports = {
       }))(),
   ].filter(Boolean),
 }
+finalConfig.watch = {
+  include: 'src/**',
+}
+
+// finalConfig.output[0].exports = 'named';
+// console.log(finalConfig);
+module.exports = finalConfig
